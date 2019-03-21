@@ -1,1 +1,4 @@
-read me
+
+This project was based on the codes from:
+https://github.com/wiseodd/probabilistic-models/blob/master/models/bayesian/gmm_variational.py
+
