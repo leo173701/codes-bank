@@ -1,0 +1,59 @@
+
+269. Alien Dictionary
+
+[269. Alien Dictionary](https://leetcode.com/problems/alien-dictionary)
+
+
+
+思路：
+
+
+
+Python 解法，同樣為Topological sort模板
+
+Construct Graph時利用words順序前後的關係，
+若為["abcgf", "abde"]，可以找到c -> d，所以in_degree['d'] += 1且neighbors['c'].append('d')
+
+Topological Sort時，由於題目規定要smallest in lexicographical order，
+所以需要minimum heap來作為BFS的queue，python可用heapq方法來實作
+
+```python3
+  from heapq import *
+  class Solution:
+      """
+      @param words: a list of words
+      @return: a string which is correct order
+      """
+      def alienOrder(self, words):
+          # Construct Graph
+          in_degree = {ch: 0 for word in words for ch in word}  # 哈希表
+          neighbors = {ch: [] for word in words for ch in word} # 哈希表
+          for pos in range(len(words) - 1):
+              for i in range(min(len(words[pos]), len(words[pos+1]))):
+                  pre, next = words[pos][i], words[pos+1][i]
+                  if pre != next:
+                    in_degree[next] += 1
+                      neighbors[pre].append(next)
+                      break
+
+          # Topological Sort
+          heap = [ch for ch in in_degree if in_degree[ch] == 0]
+          heapify(heap)
+          order = []
+          while heap:
+              for _ in range(len(heap)):
+                  ch = heappop(heap)
+                  order.append(ch)
+                  for child in neighbors[ch]:
+                      in_degree[child] -= 1
+                      if in_degree[child] == 0:
+                          heappush(heap, child)
+
+          # order is invalid
+          if len(order) != len(in_degree):
+              return ""
+          return ''.join(order)
+
+```
+
+
