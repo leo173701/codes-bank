@@ -17,7 +17,7 @@ Construct Graph時利用words順序前後的關係，
 Topological Sort時，由於題目規定要smallest in lexicographical order，
 所以需要minimum heap來作為BFS的queue，python可用heapq方法來實作
 
-```python3
+```python
   from heapq import *
   class Solution:
       """
