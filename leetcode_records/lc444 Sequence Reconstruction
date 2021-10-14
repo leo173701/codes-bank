@@ -1,0 +1,63 @@
+
+
+\444. Sequence Reconstruction
+
+
+
+重点：拓扑排序保证其唯一性的时候，每次indegree降为0的时候有且只有一个node；如果有多于一个node的indegree降为0，就意味着这几个node谁先谁后进入result都符合要求，序列不唯一。
+
+这样每一层的size其实都是1，最终level == len(org)。
+
+我更喜欢在while queue里面加入对size == 1的判断，而不用level来判断，更加直观易懂
+
+
+
+
+
+```python
+class Solution:
+    """
+    @param org: a permutation of the integers from 1 to n
+    @param seqs: a list of sequences
+    @return: true if it can be reconstructed only one or false
+    """
+    def sequenceReconstruction(self, org, seqs):
+        # write your code here
+        
+        indegree = {}
+        neighbors = {}
+        nodes_seqs = set()
+        
+        for x in org:
+            indegree[x] = 0
+            neighbors[x] = []
+        
+        for seq in seqs:
+
+            nodes_seqs = nodes_seqs | set(seq) 
+            # 取并集
+            # memorize this step, this is to expand everything in seqs
+            for i in range(len(seq) - 1):
+                if seq[i] not in indegree or seq[i+1] not in indegree:
+                    return False
+                neighbors[seq[i]].append(seq[i+1])
+                indegree[seq[i+1]] += 1 
+                
+        start = [n for n in indegree if indegree[n] == 0]
+        queue = collections.deque(start)
+        level = 0
+        res= []
+        
+        while queue:
+            size = len(queue)
+            level += 1
+            for _ in range(size):
+                node = queue.popleft()
+                res.append(node)
+                for neighbor in neighbors[node]:
+                    indegree[neighbor] -= 1 
+                    if indegree[neighbor] == 0:
+                        queue.append(neighbor)
+        
+        return res == org and len(nodes_seqs) == len(org) and level == len(org)
+```
