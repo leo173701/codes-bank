@@ -1,3 +1,5 @@
+例题：\34. Find First and Last Position of Element in Sorted Array
+找到从左边开始的第一个元素，和从右边开始的第一个元素
 
 
 ### 1. 二分标准模板 
