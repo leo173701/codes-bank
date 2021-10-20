@@ -71,9 +71,7 @@ dp[k][m] = n
 
 **给你 `K` 鸡蛋，`N` 层楼，让你求最坏情况下最少的测试次数 `m`** 吗？`while` 循环结束的条件是 `dp[K][m] == N`，也就是**给你 `K` 个鸡蛋，测试 `m` 次，最坏情况下最多能测试 `N` 层楼**。
 
-在 i=4 这一层扔下去
 
-<img src="https://github.com/labuladong/fucking-algorithm/raw/master/pictures/%E6%89%94%E9%B8%A1%E8%9B%8B/1.jpg" alt="img" style="zoom:67%;" />
 
 这个图描述的仅仅是某一个楼层 `i`，原始解法还得线性或者二分扫描所有楼层，要求最大值、最小值。但是现在这种 `dp` 定义根本不需要这些了，基于下面两个事实：
 
@@ -93,7 +91,7 @@ dp[k][m] = dp[k][m - 1] + dp[k - 1][m - 1] + 1
 
 PS：这个 `m` 为什么要减一而不是加一？之前定义得很清楚，这个 `m` 是一个允许的次数上界，而不是扔了几次。
 
-| <img src="https://github.com/labuladong/fucking-algorithm/raw/master/pictures/%E6%89%94%E9%B8%A1%E8%9B%8B/3.jpg" alt="img" style="zoom: 50%;" /> | <img src="https://github.com/labuladong/fucking-algorithm/raw/master/pictures/%E6%89%94%E9%B8%A1%E8%9B%8B/1.jpg" alt="img" style="zoom: 50%;" /> |
+| <img src="https://github.com/labuladong/fucking-algorithm/raw/master/pictures/%E6%89%94%E9%B8%A1%E8%9B%8B/3.jpg" alt="img" style="zoom: 50%;" /> | 在 i=4 这一层扔下去 <img src="https://github.com/labuladong/fucking-algorithm/raw/master/pictures/%E6%89%94%E9%B8%A1%E8%9B%8B/1.jpg" alt="img" style="zoom: 50%;" /> |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 
 ```python
