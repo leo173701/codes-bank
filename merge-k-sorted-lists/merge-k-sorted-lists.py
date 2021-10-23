@@ -3,33 +3,24 @@
 #     def __init__(self, val=0, next=None):
 #         self.val = val
 #         self.next = next
+from heapq import heappush, heappop
 class Solution(object):
     def mergeKLists(self, lists):
         """
         :type lists: List[ListNode]
         :rtype: ListNode
         """
-        self.sequence = 0
+        dummy = ListNode(None)
+        tail, heap = dummy, []
         
-        if not lists:
-            return None
-        
-        trav = dummy = ListNode(-1)
-        heap = []
-        for ll in lists:
-            if ll:
-                self.heappushNode(heap, ll)
-                
+        for index, head in enumerate(lists):
+            if not head: continue
+            heappush(heap, (head.val, index, head))
+            
         while heap:
-            node = heappop(heap)[2]
-            trav.next = node
-            trav = trav.next
-            #print(trav.val)
-            if trav.next:
-                self.heappushNode(heap, trav.next)
+            _, index, head = heappop(heap)
+            tail.next, tail = head, head
+            if head.next:
+                heappush(heap, (head.next.val, index, head.next))
                 
         return dummy.next
-            
-    def heappushNode(self, heap, node):
-        self.sequence += 1
-        heappush(heap, (node.val, self.sequence, node))
