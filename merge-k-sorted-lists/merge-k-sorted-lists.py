@@ -10,17 +10,16 @@ class Solution(object):
         :type lists: List[ListNode]
         :rtype: ListNode
         """
-        dummy = ListNode(None)
-        tail, heap = dummy, []
-        
-        for index, head in enumerate(lists):
-            if not head: continue
-            heappush(heap, (head.val, index, head))
-            
+        dummy = ListNode(0)
+        temp = dummy
+        heap = []
+        for index,node in enumerate(lists):
+            if node:
+                heapq.heappush(heap,(node.val, index, node))
         while heap:
-            _, index, head = heappop(heap)
-            tail.next, tail = head, head
-            if head.next:
-                heappush(heap, (head.next.val, index, head.next))
-                
+            _, curindex, curnode= heapq.heappop(heap)
+            temp.next = curnode
+            temp = temp.next
+            if curnode.next:
+                heapq.heappush(heap,(curnode.next.val, index, curnode.next))
         return dummy.next
