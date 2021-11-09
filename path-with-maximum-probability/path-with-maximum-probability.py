@@ -1,27 +1,19 @@
-# from collections import defaultdict
 class Solution:
     def maxProbability(self, n: int, edges: List[List[int]], succProb: List[float], start: int, end: int) -> float:
-        p = [0]*n
-        p[start]=1
-        probability = {}
-        for i in range(len(edges)):
-            probability[(edges[i][0],edges[i][1])]=succProb[i]
-            probability[(edges[i][1],edges[i][0])]=succProb[i]
-        pq = deque([start])
+        graph, prob = dict(), dict() #graph with prob
+        for i, (u, v) in enumerate(edges):
+            graph.setdefault(u, []).append(v)
+            graph.setdefault(v, []).append(u)
+            prob[u, v] = prob[v, u] = succProb[i]
         
-        # heapq.heappush(pq, start)
-        graph =collections.defaultdict(list)
-        for i in range(len(edges)):
-            graph[edges[i][0]].append(edges[i][1])
-            graph[edges[i][1]].append(edges[i][0])
-
-        while pq:
-            cur = pq.popleft()
-            # cur = heapq.heappop(pq)
-            for nextnode in graph[cur]:
-                temp = p[cur]*probability[(cur,nextnode)]
-                if p[nextnode]<temp:
-                    p[nextnode]=temp
-                    pq.append(nextnode)
-                    # heapq.heappush(pq,nextnode)
-        return float(p[end])
+        h = [(-1, start)] #Dijkstra's algo
+        seen = set()
+        while h: 
+            p, n = heappop(h)
+            if n == end: return -p
+            seen.add(n)
+            for nn in graph.get(n, []):
+                if nn in seen: continue 
+                heappush(h, (p * prob.get((n, nn), 0), nn))
+        return 0
+        
