@@ -1,20 +1,17 @@
 
 class Solution:
     def minimumEffortPath(self, heights: List[List[int]]) -> int:
-        m, n = len(heights), len(heights[0])
-        dist = [[float('inf')] * n for _ in range(m)]  # 用数组来表示，更快
-        minHeap = [(0, 0, 0)] # distance, row, col
-        DIR = [0, 1, 0, -1, 0] # 这个更省空间
-        while minHeap:
-            d, r, c = heappop(minHeap)
-            if d > dist[r][c]: 
-                continue
-            if r == m - 1 and c == n - 1:
-                return d  # Reach to bottom right
-            for i in range(4):
-                nr, nc = r + DIR[i], c + DIR[i + 1]
-                if 0 <= nr < m and 0 <= nc < n:
-                    newDist = max(d, abs(heights[nr][nc] - heights[r][c]))
-                    if dist[nr][nc] > newDist:
-                        dist[nr][nc] = newDist
-                        heappush(minHeap, (dist[nr][nc], nr, nc))
+        m, n = map(len, (heights, heights[0]))
+        efforts = [[math.inf] * n for _ in range(m)]
+        efforts[0][0] = 0
+        heap = [(0, 0, 0)]
+        while heap:
+            effort, x, y = heapq.heappop(heap)
+            if (x, y) == (m - 1, n - 1):
+                return effort
+            for r, c in (x, y + 1), (x, y - 1), (x + 1, y), (x - 1, y):
+                if m > r >= 0 <= c < n:
+                    next_effort = max(effort, abs(heights[r][c] - heights[x][y]))
+                    if efforts[r][c] > next_effort:
+                        efforts[r][c] = next_effort
+                        heapq.heappush(heap, (next_effort, r, c))
