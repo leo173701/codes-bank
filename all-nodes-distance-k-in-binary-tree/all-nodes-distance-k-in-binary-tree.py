@@ -7,24 +7,42 @@
 
 class Solution:
     def distanceK(self, root: TreeNode, target: TreeNode, K: int) -> List[int]:
-        def dfs(node, par = None):
-            if node:
-                node.par = par
-                dfs(node.left, node)
-                dfs(node.right, node)
-
-        dfs(root)
-
-        queue = collections.deque([(target, 0)])
-        seen = {target}
-        while queue:
-            if queue[0][1] == K:
-                return [node.val for node, d in queue]
-            node, d = queue.popleft()
-            for nei in (node.left, node.right, node.par):
-                if nei and nei not in seen:
-                    seen.add(nei)
-                    queue.append((nei, d+1))
-
-        return []
+        
+        
+        graph = defaultdict(set)
+        self.dfs(None, root, graph)
+        q=deque([target])
+        current_distance = 0
+        visited = {target}
+        while q:
+            next_level = deque([])
+            if current_distance==K:
+                break
+            while q:
+                cur = q.popleft()
+                for node in graph[cur]:
+                    if node in visited:
+                        continue
+                    visited.add(node)
+                    next_level.append(node)
+            q=next_level
+            current_distance +=1
+        # print([node.val for node in q])
+        return [node.val for node in q]
+            
+            
+            
+    def dfs(self,parent, node, graph):
+        if not node:
+            return
+        if parent and node:
+            graph[node].add(parent)
+            graph[parent].add(node)
+        if node.left:
+            self.dfs(node,node.left, graph)
+        if node.right:
+            self.dfs(node,node.right,graph)
+        
+        
+        
               
