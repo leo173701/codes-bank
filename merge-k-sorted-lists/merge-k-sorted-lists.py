@@ -3,7 +3,7 @@
 #     def __init__(self, val=0, next=None):
 #         self.val = val
 #         self.next = next
-from heapq import heappush, heappop
+
 class Solution(object):
     def mergeKLists(self, lists):
         """
@@ -12,14 +12,16 @@ class Solution(object):
         """
         dummy = ListNode(0)
         temp = dummy
-        heap = []
-        for index,node in enumerate(lists):
+        
+        pq = []
+        for i, node in enumerate(lists):
             if node:
-                heapq.heappush(heap,(node.val, index, node))
-        while heap:
-            _, curindex, curnode= heapq.heappop(heap)
-            temp.next = curnode
+                heapq.heappush(pq,(node.val, i, node))
+        while pq:
+            _, index, node = heapq.heappop(pq)
+            temp.next = node
             temp = temp.next
-            if curnode.next:
-                heapq.heappush(heap,(curnode.next.val, index, curnode.next))
+            if node.next:
+                heapq.heappush(pq,(node.next.val, index, node.next))
         return dummy.next
+            
