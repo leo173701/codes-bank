@@ -1,16 +1,16 @@
 class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
+        n = len(nums)
         res = []
-        self.helper(nums,[],res)
-        return res
-    
-    
-    def helper(self,nums,track, res):
-        if len(track)==len(nums):
-            res.append(list(track))      
-        for i in nums:
-            if i in track:
-                continue
-            track.append(i)
-            self.helper(nums,track,res)
-            track.pop()            
+        def dfs(nums, track, res):
+            if len(track)==n:
+                res.append(track[:])
+            for i in nums:
+                if i in track:
+                    continue
+                track.append(i)
+                dfs(nums,track,res)
+                track.pop()
+        dfs(nums,[],res)
+        
+        return res 
