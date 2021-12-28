@@ -1,24 +1,13 @@
 class Solution:
     def deleteAndEarn(self, nums: List[int]) -> int:
-        visited = collections.Counter(nums)
-        # print(visited)
-        n = len(visited)
-        if n==1:
-            return nums[0]*visited[nums[0]]
-        dp = [0]*n
-        temp = list(visited.keys())
-        temp.sort()
-        # print(temp)
-        dp[0] = temp[0]*visited[temp[0]]
-        if temp[1]-temp[0]==1:
-            dp[1]=max(dp[0], temp[1]*visited[temp[1]])
-        else:
-            dp[1]=dp[0]+temp[1]*visited[temp[1]]
-        if n==2:
-            return dp[1]
-        for i in range(2,n):
-            if temp[i]-temp[i-1]==1:
-                dp[i]=max(dp[i-1], temp[i]*visited[temp[i]] + dp[i-2])
-            else:
-                dp[i]=dp[i-1]+temp[i]*visited[temp[i]] 
-        return dp[n-1]
+        n = len(nums)
+        frequency = collections.Counter(nums)
+        maxvalue = max(nums)
+        dp = [[0,0] for _ in range(maxvalue+1)]
+        #dp[i][0] 代表「不选」数值 i；
+        #dp[i][1] 代表「选择」数值 i
+        for i in range(1,maxvalue+1):
+            dp[i][1]= dp[i-1][0]+ i * frequency.get(i,0)
+            dp[i][0]=max(dp[i-1][0],dp[i-1][1])
+        print(dp)
+        return max(dp[maxvalue])
