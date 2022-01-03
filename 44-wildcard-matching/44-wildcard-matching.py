@@ -3,8 +3,9 @@ class Solution:
         dp = [[False ]*(len(p)+1) for j in range(len(s) + 1)]
         dp[0][0] = True   #dp[0][0]初始化为true，由此开始转移
         for i in range(1, len(p) + 1):
-            if (p[i - 1] == '*'):		
-                dp[0][i] = dp[0][i - 1]
+            if (p[i - 1] != '*'):
+                break
+            dp[0][i] = True
         for i in range(1, len(s) + 1):
             for j in range(1, len(p) + 1):
                 if p[j-1]=="*":
