@@ -1,10 +1,5 @@
 class Solution:
-    def isMatch(self, s: str, p: str) -> bool:
-        if set(p)=={"*"}:
-            return True
-        if not s and not p:
-            return True
-        
+    def isMatch(self, s: str, p: str) -> bool:        
         dp = [[False ]*(len(p)+1) for j in range(len(s) + 1)]
         dp[0][0] = True   #dp[0][0]初始化为true，由此开始转移
         for i in range(1, len(p) + 1):
