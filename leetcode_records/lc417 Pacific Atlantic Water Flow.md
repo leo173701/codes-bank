@@ -53,6 +53,63 @@ class Solution:
         return list(res)
 ```
 
+BFS 思路：从两个终点分别处罚，分别用visited=set() 来记录能扩散到哪些点，
+         最后求一下交集
+```python
+class Solution:
+    def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
+
+        m = len(heights)
+        n = len(heights[0])
+        
+        qA = collections.deque()
+        qB = collections.deque()
+        visitedA = set()
+        visitedB = set()
+        for i in range(m):
+            qA.append((i,0))
+            visitedA.add((i,0))
+            qB.append((i,n-1))
+            visitedB.add((i,n-1))
+        for j in range(n):
+            qA.append((0,j))
+            qB.append((m-1,j))
+            visitedA.add((0,j))
+            visitedB.add((m-1,j))
+        
+        while qA:
+            #不用考虑步数，直接一口气全部添加
+            curx, cury = qA.popleft()
+            for newx, newy in [(curx,cury +1),(curx,cury -1),(curx+1,cury),(curx-1,cury)]:
+                if newx<0 or newx>=m or newy<0 or newy>=n:  #越界了，
+                    continue
+                #满足某种条件就加入进q
+                if (newx,newy) in visitedA:
+                    continue
+                if heights[newx][newy] >= heights[curx][cury]:
+                    visitedA.add((newx,newy))
+                    qA.append((newx,newy))
+        
+        # res = []
+        while qB:
+            #不用考虑步数，直接一口气全部添加
+            curx, cury = qB.popleft()
+            for newx, newy in [(curx,cury +1),(curx,cury -1),(curx+1,cury),(curx-1,cury)]:
+                if newx<0 or newx>=m or newy<0 or newy>=n:  #越界了，
+                    continue
+                #满足某种条件就加入进q
+                if (newx,newy) in visitedB:
+                    continue
+                if heights[newx][newy] >= heights[curx][cury]:
+                    visitedB.add((newx,newy))
+                    qB.append((newx,newy))
+                    
+#         print(visitedA)
+#         print(visitedB)
+        c = visitedA.intersection(visitedB)  #求交集
+        return [[x,y] for (x,y) in c]
+```
+
 
 
 别人的思路：
