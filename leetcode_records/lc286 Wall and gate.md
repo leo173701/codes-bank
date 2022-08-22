@@ -55,3 +55,59 @@ class Solution:
                     visited.add((newx, newy))
 ```
 
+另外一种做法： 再来一个哈希表 来存储结果
+
+```python
+# BFS 做法
+from typing import (
+    List,
+)
+
+class Solution:
+    """
+    @param rooms: m x n 2D grid
+    @return: nothing
+    """
+    def walls_and_gates(self, rooms: List[List[int]]):
+        # write your code here
+        q=collections.deque()
+        time =0
+        m = len(rooms)
+        n = len(rooms[0])
+        count=0
+        timetable = {}
+    # 对q初始化， 统计最开始的时候有多少
+        for i in range(m):
+            for j in range(n):
+                if rooms[i][j]==0:
+                    q.append((i,j))
+                elif rooms[i][j]==2147483647:
+                    count+=1
+                    timetable[(i,j)]=m*n
+        # print(timetable.keys())
+        while count>0 and len(q)>0:
+            length = len(q)
+            # print(q)
+            # print("第",time+1,"轮扩散")
+            for _ in range(length):
+                i,j = q.popleft()
+                # print("  从",i,j,"位置扩散，")
+                for (x,y) in [(i+1,j),(i-1,j),(i,j+1),(i,j-1)]:
+                    
+                    if x>=m or x<0 or y>=n or y<0 or rooms[x][y]==-1:#越界或者遇到墙
+                        continue
+                    if rooms[x][y]==0:  #在之前的过程当中，这个位置已经访问过了，它不会被扩散
+                        continue
+                    # print("         现在扩散到这里：", x,y)
+                    rooms[x][j]=0
+                    # count-=1  #同时，新鲜的数量-1
+                    q.append((x,y))
+                    timetable[(x,y)]=min(timetable[(x,y)], time) #记录下扩散到当前位置需要多长的时间-1
+            time +=1
+        for x,y in timetable.keys():
+            if timetable[(x,y)]==m*n:
+                rooms[x][y] = 2147483647
+            else:
+                rooms[x][y]=timetable[(x,y)]+1
+```
+
